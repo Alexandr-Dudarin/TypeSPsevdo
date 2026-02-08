@@ -16,8 +16,25 @@ console.log(`Индекс элемента ${target} в массиве: ${index}
 
 //Задача 2
 
-function mergeObjects<T, U>(obj1: T, obj2: U): T & U {
-  return { ...obj1, ...obj2 };
+function mergeObjects<T extends object, U extends object>(obj1: T, obj2: U): T & U {
+  const result: any = {};
+
+  const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
+
+  keys.forEach((key) => {
+    const val1 = (obj1 as any)[key];
+    const val2 = (obj2 as any)[key];
+
+    if (val1 !== undefined && val2 !== undefined) {
+      result[key] = [val1, val2];
+    } else if (val1 !== undefined) {
+      result[key] = val1;
+    } else {
+      result[key] = val2;
+    }
+  });
+
+  return result as T & U;
 }
 
 const person1 = { name: 'Alice', age: 30 };
